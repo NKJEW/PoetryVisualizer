@@ -106,7 +106,7 @@ function updateSyllableCount(id) {
     for (var i = 0; i < words.length; i++) {
         var word = words[i];
         if (word.trim() !== "") {
-            totalSyllables += RiTa.getSyllables(word).split('/').length;
+            totalSyllables += RiTa.getSyllables(RiTa.stripPunctuation(word)).split('/').length;
         }
     }
 
@@ -160,7 +160,7 @@ function updateLineRhyme(id) {
 }
 
 function lastWord(line) {
-    var words = line.split(' ');
+    var words = RiTa.stripPunctuation(line).split(' ');
     return words[words.length - 1];
 }
 
