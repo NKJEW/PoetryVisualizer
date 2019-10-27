@@ -1,0 +1,27 @@
+.inputbox {
+    width: 500px;
+    outline: none;
+    border: none;
+}
+.big-container{
+    border: 1px solid grey;
+    padding: 10px;
+    border-radius: 5px;
+    margin: 0 auto;
+    left: 100px;
+    width: 530px;
+}
+.line-container{
+    position: relative;
+    margin-bottom: 10px;
+}
+.line-container:last-child{
+    margin-bottom: 0px;
+}
+.syllable-counter{
+    color: grey;
+    position: absolute;
+    bottom: -14px;
+    left: 510px;
+
+}
