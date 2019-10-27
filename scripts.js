@@ -5,14 +5,19 @@ var rhymeColors = [];
 var colorValNum = 0;
 var colorValDenom = 1;
 
-var lineTemplate = "<div class=\"line-container\"><input class=\"inputbox\" type=\"text\" onkeydown=\"dealWithKeyboard(#, event)\" autocomplete=\"off\" id=\"input-#\" placeholder=\". . .\"><p class=\"syllable-counter\" id=\"counter-#\">0</p><p class=\"rhymer\" id=\"rhymer-#\"></p></div>";
+var lineTemplate = "<div class=\"line-container\"><input class=\"inputbox\" type=\"text\" onblur=\"dealWithBlur(#)\" oninput=\"dealWithInput(#)\" onkeydown=\"dealWithKeyboard(#, event)\" autocomplete=\"off\" id=\"input-#\" placeholder=\". . .\"><p class=\"syllable-counter\" id=\"counter-#\">0</p><p class=\"rhymer\" id=\"rhymer-#\"></p></div>";
 
 function dealWithEnd(id) {
     initLines();
     addLines(id);
     updateLines();
     updateAllRhymes();
-    document.getElementById("input-" + Math.min(id + 1, lines.length - 1)).focus();
+    shiftFocus(nextLine(id));
+}
+
+function dealWithBlur(id) {
+    initLines();
+    updateAllRhymes();
 }
 
 function initLines() {
@@ -39,22 +44,49 @@ function updateLines() {
 }
 
 function dealWithKeyboard(id, event) {
+    //up arrow
+    if(event.keyCode == 38) {
+        shiftFocus(prevLine(id));
+        return;
+    }
+
+    //down arrow
+    if(event.keyCode == 40) {
+        shiftFocus(nextLine(id));
+        return;
+    }
+
+    //new line
     if(event.keyCode == 13) {
         dealWithEnd(id);
         return;
     }
 
+    //delete
     if (lines.length > 1 && getInput(id) === "" && event.keyCode == 8) {
-        var nextLineId = Math.max(id - 1, 0);
-        document.getElementById("input-" + nextLineId).readOnly = true;
         deleteLine(id);
         return;
     }
+}
+
+function dealWithInput(id) {
     updateSyllableCount(id);
 }
 
 function getInput(id) {
     return document.getElementById("input-" + id).value;
+}
+
+function nextLine(id) {
+    return Math.min(id + 1, lines.length - 1);
+}
+
+function prevLine(id) {
+    return Math.max(id - 1, 0);
+}
+
+function shiftFocus(id) {
+    document.getElementById("input-" + id).focus();
 }
 
 function deleteLine(id) {
@@ -64,26 +96,38 @@ function deleteLine(id) {
     updateLines();
     updateAllRhymes();
 
-    var nextLineId = Math.max(id - 1, 0);
+    var nextLineId = prevLine(id);
     var prevText = lines[nextLineId] + " ";
-    document.getElementById("input-" + nextLineId).focus();
+    shiftFocus(nextLineId);
     document.getElementById("input-" + nextLineId).value = prevText;
 }
 
 function updateRhymeDisplay() {
     for (var i = 0; i < lines.length; i++) {
-        var display = (lines[i] !== "") ? alphabet[rhymes[i]] : "";
-        document.getElementById("rhymer-" + i).innerHTML = display;
+        document.getElementById("rhymer-" + i).innerHTML = getAlpha(rhymes[i]);
         // document.getElementById("rhymer-" + i).style.color = "#" + getColor(rhymeColors[rhymes[i]]);
     }
 }
 
+function getAlpha(rhymeKey) {
+    if (rhymeKey == -1) {
+        return "";
+    }
+
+    if (rhymeKey < alphabet.length) {
+        return alphabet[rhymeKey];
+    }
+
+    return getAlpha(rhymeKey % alphabet.length).repeat(Math.floor(rhymeKey / alphabet.length) + 1);
+}
+
 function updateSyllableCount(id) {
     var totalSyllables = 0;
+
     var words = getInput(id).split(' ');
     for (var i = 0; i < words.length; i++) {
         var word = words[i];
-        if (word.trim() != "") {
+        if (word.trim() !== "") {
             totalSyllables += RiTa.getSyllables(word).split('/').length;
         }
     }
@@ -101,9 +145,15 @@ function updateAllRhymes() {
 }
 
 function updateLineRhyme(id) {
+    if (lines[id] === "") {
+        rhymes.push(-1);
+        return;
+    }
+
     for (var i = 0; i < rhymes.length; i++) {
         curLastWord = lastWord(lines[id]);
         otherLastWord = lastWord(lines[i]);
+
         if (curLastWord.toLowerCase() === otherLastWord.toLowerCase() || RiTa.isRhyme(curLastWord, otherLastWord)) {
             rhymes.push(rhymes[i]);
             return;
@@ -147,4 +197,37 @@ function getColor(value) {
 
 function clamp01(value) {
     return Math.min(Math.max(0, value), 1)
+}
+
+function copyAll() {
+    var poem = "";
+    poem += document.getElementById("title").value += "\n\n";
+
+    for(var i = 0; i < lines.length; i++) {
+        poem += getInput(i);
+        if(i < lines.length - 1) {
+            poem += "\n";
+        }
+    }
+
+    var el = document.createElement('textarea');
+    el.value = poem;
+
+    document.body.appendChild(el);
+    // Select text inside element
+    el.select();
+    // Copy text to clipboard
+    document.execCommand('copy');
+    // Remove temporary element
+    document.body.removeChild(el);
+}
+
+function clearAll() {
+    lines = [""];
+    rhymes = [];
+    rhymeColors = [];
+    updateLines();
+    shiftFocus(0);
+
+    document.getElementById("title").value = "";
 }

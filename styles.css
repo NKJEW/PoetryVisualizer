@@ -2,7 +2,27 @@ input{
     outline: none;
     border: none;
 }
+button{
+    font-size: 20px;
+    color: rgb(117,117,117);
+    border-radius: 5px;
+    background-color: #fefefe;
+    border: 1px solid grey;
+    padding: 4px 8px;
+    font-family: serif;
+    margin-right: -10px;
+}
+button:first-child{
+    margin-right: 10px;
+}
+button:hover{
+    border-color: #dddddd;
+}
 
+.endbar{
+    display: flex;
+    justify-content: flex-end;
+}
 .inputtitle{
     font-family: 'Libre Caslon Text', serif;
     width: 710px;
