@@ -1,15 +1,27 @@
-.inputbox {
-    width: 500px;
+input{
     outline: none;
     border: none;
+}
+
+.inputtitle{
+    font-family: 'Libre Caslon Text', serif;
+    width: 710px;
+    margin: 10px auto;
+    font-style: bold;
+    font-size: 42px;
+    text-align: center;
+}
+.inputbox {
+    width: 680px;
+    font-family: 'Libre Caslon Text', serif;
+    font-size: 26px;
 }
 .big-container{
     border: 1px solid grey;
     padding: 10px;
     border-radius: 5px;
     margin: 0 auto;
-    left: 100px;
-    width: 530px;
+    width: 710px;
 }
 .line-container{
     position: relative;
@@ -21,7 +33,17 @@
 .syllable-counter{
     color: grey;
     position: absolute;
-    bottom: -14px;
-    left: 510px;
-
+    bottom: -25px;
+    left: 690px;
+    font-family: 'Libre Caslon Text', serif;
+    font-size: 26px;
+    text-align: left;
+}
+.rhymer{
+    color: grey;
+    position: absolute;
+    bottom: -25px;
+    left: 740px;
+    font-family: 'Libre Caslon Text', serif;
+    font-size: 26px;
 }

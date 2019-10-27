@@ -1,20 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <link rel="stylesheet" href="styles.css" />
-    <meta name='viewport' content='width=device-width, initial-scale=1' />
-    <script src="rita.js"></script>
-    <script src="poems.js"></script>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="styles.css" />
+  <meta name='viewport' content='width=device-width, initial-scale=1' />
+  <link href="https://fonts.googleapis.com/css?family=Libre+Caslon+Text&display=swap" rel="stylesheet">
+  <script src="rita.js"></script>
 </head>
 <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
+    <div class="big-container" style="border: none">
+      <input placeholder="Title" class="inputtitle">
+    </div>
     <div class="big-container" id="inputs">
       <div class="line-container">
-          <input class="inputbox" type="text" oninput="dealWithKeyboard(0)" onchange="dealWithEnd(0)" autocomplete="off" id="input-0">
+          <input class="inputbox" type="text" oninput="dealWithKeyboard(0)" onchange="dealWithEnd(0)" autocomplete="off" id="input-0" placeholder=". . .">
           <p class="syllable-counter" id="counter-0">0</p>
-          <!-- <p class="rhymer" id="rhymer-0"></p> -->
       </div>
 
     </div>
@@ -25,7 +27,7 @@ var lines = [""];
 var rhymes = [];
 var alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-var lineTemplate = "<div class=\"line-container\"><input class=\"inputbox\" type=\"text\" oninput=\"dealWithKeyboard(#)\" onchange=\"dealWithEnd(#)\" autocomplete=\"off\" id=\"input-#\"><p class=\"syllable-counter\" id=\"counter-#\">0</p><p class=\"rhymer\" id=\"rhymer-#\">0</p></div>";
+var lineTemplate = "<div class=\"line-container\"><input class=\"inputbox\" type=\"text\" oninput=\"dealWithKeyboard(#)\" onchange=\"dealWithEnd(#)\" autocomplete=\"off\" id=\"input-#\" placeholder=\". . .\"><p class=\"syllable-counter\" id=\"counter-#\">0</p><p class=\"rhymer\" id=\"rhymer-#\">0</p></div>";
 
 function dealWithEnd(id) {
     updateLines();
