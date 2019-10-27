@@ -17,7 +17,7 @@
     </div>
     <div class="big-container" id="inputs">
       <div class="line-container">
-          <input class="inputbox" type="text" oninput="dealWithKeyboard(0)" onchange="dealWithEnd(0)" autocomplete="off" id="input-0" placeholder=". . .">
+          <input class="inputbox" type="text" onkeyup="dealWithKeyboard(0, event)" autocomplete="off" id="input-0" placeholder=". . .">
           <p class="syllable-counter" id="counter-0">0</p>
       </div>
 

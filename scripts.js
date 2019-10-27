@@ -5,24 +5,27 @@ var rhymeColors = [];
 var colorValNum = 0;
 var colorValDenom = 1;
 
-var lineTemplate = "<div class=\"line-container\"><input class=\"inputbox\" type=\"text\" oninput=\"dealWithKeyboard(#)\" onchange=\"dealWithEnd(#)\" autocomplete=\"off\" id=\"input-#\" placeholder=\". . .\"><p class=\"syllable-counter\" id=\"counter-#\">0</p><p class=\"rhymer\" id=\"rhymer-#\">0</p></div>";
+var lineTemplate = "<div class=\"line-container\"><input class=\"inputbox\" type=\"text\" onkeydown=\"dealWithKeyboard(#, event)\" autocomplete=\"off\" id=\"input-#\" placeholder=\". . .\"><p class=\"syllable-counter\" id=\"counter-#\">0</p><p class=\"rhymer\" id=\"rhymer-#\"></p></div>";
 
 function dealWithEnd(id) {
+    initLines();
+    addLines(id);
     updateLines();
     updateAllRhymes();
-    document.getElementById("input-" + (id + 1)).focus();
+    document.getElementById("input-" + Math.min(id + 1, lines.length - 1)).focus();
 }
 
-function updateLines() {
+function initLines() {
     for (var i = 0; i < lines.length; i++) {
         lines[i] = document.getElementById("input-" + i).value;
     }
+}
 
-    if (lines[lines.length - 1] === "") {
-        return;
-    }
+function addLines(id) {
+    lines.splice(id + 1, 0, "");
+}
 
-    lines.push("");
+function updateLines() {
     var containedHTML = "";
     for (var i = 0; i < lines.length; i++) {
         containedHTML += lineTemplate.replace(/#/g, i);
@@ -35,8 +38,36 @@ function updateLines() {
     }
 }
 
-function dealWithKeyboard(id) {
+function dealWithKeyboard(id, event) {
+    if(event.keyCode == 13) {
+        dealWithEnd(id);
+        return;
+    }
+
+    if (lines.length > 1 && getInput(id) === "" && event.keyCode == 8) {
+        var nextLineId = Math.max(id - 1, 0);
+        document.getElementById("input-" + nextLineId).readOnly = true;
+        deleteLine(id);
+        return;
+    }
     updateSyllableCount(id);
+}
+
+function getInput(id) {
+    return document.getElementById("input-" + id).value;
+}
+
+function deleteLine(id) {
+    lines.splice(id, 1);
+    rhymes.splice(id, 1);
+
+    updateLines();
+    updateAllRhymes();
+
+    var nextLineId = Math.max(id - 1, 0);
+    var prevText = lines[nextLineId] + " ";
+    document.getElementById("input-" + nextLineId).focus();
+    document.getElementById("input-" + nextLineId).value = prevText;
 }
 
 function updateRhymeDisplay() {
@@ -49,7 +80,7 @@ function updateRhymeDisplay() {
 
 function updateSyllableCount(id) {
     var totalSyllables = 0;
-    var words = document.getElementById("input-" + id).value.split(' ');
+    var words = getInput(id).split(' ');
     for (var i = 0; i < words.length; i++) {
         var word = words[i];
         if (word.trim() != "") {
