@@ -1,6 +1,6 @@
 PoetryVisualizer
 
-Open poett.html to use!
+Visit https://nkjew.github.io/PoetryVisualizer/ to use!
 
 Features:
 - Minimalistic interface to evoke your latent poetic ability
